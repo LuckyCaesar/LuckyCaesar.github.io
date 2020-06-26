@@ -125,7 +125,7 @@
             
           </h1>
           <p class="posted-on">
-          2020-06-25
+          2020-06-26
           </p>
           <div class="tags-links">
             
@@ -154,7 +154,7 @@
 <p><code>java.util.stream</code>框架支持对集合或者其他源进行<u>数据驱动</u>的操作，其中大多数方法都是对每一个数据元素应用相同的操作。<u>当多个内核可用时</u>，我们可以使用集合的<code>parallelStream()</code>方法，使得“数据驱动”变成“数据并行”。但是，什么时候应该这样做呢？（<em>注：说明不是有多核就可以盲目使用并行流</em>）</p>
 <p>当各个操作是独立的，并且<u>计算量很大</u>或者是作用于<u>可以高效拆分数据结构的大量数据元素</u>，或者以上情况都有时，那么请考虑使用<code>S.parallelStream().operation(F)</code> 来替代<code>S.stream().operation(F)</code>。下面是详细的说明：</p>
 <ul>
-<li><strong>F</strong>，每个元素的函数操作（通常是一个lambda）是独立的：对每个数据元素的计算是<u>不需要依赖或者不会影响</u>其他任何数据元素的。</li>
+<li><strong>F</strong>，<u>每个元素的函数操作（通常是一个lambda）是独立的</u>：对每个数据元素的计算是<u>不需要依赖或者不会影响</u>其他任何数据元素的。</li>
 <li><strong>S</strong>，<u>数据源集合可以被高效的拆分</u>。除了Collections外，还有一些其它易于并行化的stream数据源，譬如<code>java.util.SplittableRandom</code>（你可以使用<code>stream.parallel()</code>方法使之并行化）。但是大多数基于IO的数据源还是主要为了顺序使用而设计的。</li>
 <li><u>执行顺序型式的总时间需要超过一个最小的阈值</u>。如今在大多数平台上，这个阈值大约是100微秒（的10倍以内），但是可以不用那么精准的去测量它。在实践中，使用 <u><strong>N</strong>（数据元素的个数） 乘以 <strong>Q</strong>（每个数据元素在 <strong>F</strong> 中消耗的时间成本）</u>就可以很好的估算了。反过来，也可以将 <strong>Q</strong> 表示为<u>操作数或者代码的行数</u>，然后检查 <strong>N * Q</strong> 至少为10000（如果还是怕这个数太小，也可以再加一两个0）。所以当 <strong>F</strong> 是一个很简单的函数比如<code>x-&gt;x+1</code>，那么只有当 <strong>N&gt;=10000</strong> 时使用parallel并行执行才会有价值。相反，当 <strong>F</strong> 需要进行大量的计算比如在棋局游戏中找到下一步的最佳走法，那么 <strong>Q</strong> 这个因子就会很大，以至于只要数据源集合可以被完全的拆分，<strong>N</strong> 就变得不那么重要了。</li>
 </ul>
